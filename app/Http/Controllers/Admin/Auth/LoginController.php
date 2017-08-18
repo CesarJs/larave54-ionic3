@@ -1,9 +1,10 @@
 <?php
 
-namespace CodeFlix\Http\Controllers\Auth;
+namespace CodeFlix\Http\Controllers\Admin\Auth;
 
 use CodeFlix\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -35,5 +36,15 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    protected function credentials(Request $request)
+    {
+        $data = $request->only($this->username(),'password');
+        $data['role'] = \CodeFlix\Models\User::ROLE_ADMIN;
+        return $data;
+    }
+    public function showLoginForm(){
+        return view('admin.auth.login');
     }
 }
